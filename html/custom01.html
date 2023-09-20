@@ -1,1043 +1,1019 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <script src="https://unpkg.com/konva@8.4.2/konva.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"
-    integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/"
-    crossorigin="anonymous"></script>
-    <title>custom05</title>
-</head>
-<body>
-  <div class="wrap">
-    <div class="btn figureBtn">
-      <button id="square">사각형</button>
-      <button id="circle">원형</button>
-      <button id="triangle">삼각형</button>
-      <button id="line">선</button>
-      <button id="text">텍스트</button>
-      <div class="img_wrap">
-        <label for="theImg" id="img">이미지</label>
-        <input type="file" id="theImg" accept="image/*" /> 
-      </div>
-      <div class="img_wrap">
-        <label for="background" id="backgroundImg">배경</label>
-        <input type="file" id="background" accept="bgimage/*" /> 
-      </div>
-      <button id="savePDF">PDF로 저장</button>
-    </div>
-    <div class="btn">
-      <select id="fontFamily">
-        <option value="Arial" selected>Arial</option>
-        <option value="sans-serif">sans-serif</option>
-        <option value="serif">serif</option>
-        <option value="monospace">monospace</option>
-        <option value="Courier">Courier</option>
-      </select>
-      <select id="fontSize">
-        <option value="11">11px</option>
-        <option value="18" selected>18px</option>
-        <option value="24">24px</option>
-        <option value="30">30px</option>
-        <option value="38">38px</option>
-        <option value="46">46px</option>
-      </select>
-      <select id="fontWeight">
-        <option value="100">100</option>
-        <option value="300">300</option>
-        <option value="500" selected>500</option>
-        <option value="700">700</option>
-        <option value="900">900</option>
-      </select>
-      <input type="color" id="color" onInput="color = this.value">
-      <button id="del">전체삭제</button>
-    </div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="../css/reset.css" />
+        <link rel="stylesheet" href="../css/style.css" />
+        <script src="https://unpkg.com/konva@8.4.2/konva.min.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"
+            integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/"
+            crossorigin="anonymous"
+        ></script>
+        <title>custom</title>
+    </head>
+    <body>
+        <div class="wrap">
+            <div class="btn figureBtn">
+                <button id="square">사각형</button>
+                <button id="circle">원형</button>
+                <button id="triangle">삼각형</button>
+                <button id="line">선</button>
+                <button id="text">텍스트</button>
+                <div class="img_wrap">
+                    <label for="theImg" id="img">이미지</label>
+                    <input type="file" id="theImg" accept="image/*" />
+                </div>
+                <div class="img_wrap">
+                    <label for="background" id="backgroundImg">배경</label>
+                    <input type="file" id="background" accept="bgimage/*" />
+                </div>
+                <button id="savePDF">PDF로 저장</button>
+            </div>
+            <div class="btn">
+                <select id="fontFamily">
+                    <option value="Arial" selected>Arial</option>
+                    <option value="sans-serif">sans-serif</option>
+                    <option value="serif">serif</option>
+                    <option value="monospace">monospace</option>
+                    <option value="Courier">Courier</option>
+                </select>
+                <select id="fontSize">
+                    <option value="11">11px</option>
+                    <option value="18" selected>18px</option>
+                    <option value="24">24px</option>
+                    <option value="30">30px</option>
+                    <option value="38">38px</option>
+                    <option value="46">46px</option>
+                </select>
+                <select id="fontWeight">
+                    <option value="100">100</option>
+                    <option value="300">300</option>
+                    <option value="500" selected>500</option>
+                    <option value="700">700</option>
+                    <option value="900">900</option>
+                </select>
+                <input type="color" id="color" onInput="color = this.value" />
+                <button id="del">전체삭제</button>
+            </div>
 
-    
-    <div id="container"></div>
-    <div id="context-menus" class="context-menus">
-      <ul>
-        <li id="context-del">삭제</li>
-      </ul>
-    </div>
-  </div>
-  <script>
-    var width = window.innerWidth;
-    var height = window.innerHeight;
-    var color = null;
-    var fontSize = null;
-    var shapes = [];
-    var select = document.getElementById('fontSize')
-        
-    var stage = new Konva.Stage({
-      container: 'container',
-      width: width,
-      height: height,
-    });
-    var layer = new Konva.Layer();
-    stage.add(layer);
+            <div id="container"></div>
+            <div id="context-menus" class="context-menus">
+                <ul>
+                    <li id="context-del">삭제</li>
+                </ul>
+            </div>
+        </div>
+        <script>
+            var width = window.innerWidth;
+            var height = window.innerHeight;
+            var color = null;
+            var fontSize = null;
+            var shapes = [];
+            var select = document.getElementById('fontSize');
 
-    // container focus
-    var container = stage.container();
-    container.tabIndex = 1; // tabIndex => 스테이지 컨테이너를 포커스 가능하게 하는 event
-
-
-    // 사각형 버튼 클릭했을 때
-    document.getElementById('square').addEventListener('click', function(){ 
-      var newRect = new createSquare();
-      shapes.push(newRect);
-    });
-    // 원형 버튼 클릭했을 때
-    document.getElementById('circle').addEventListener('click', function(){ 
-      var newRect = new createCircle();
-      shapes.push(newRect);
-    });
-    // 삼각형 버튼 클릭했을 때
-    document.getElementById('triangle').addEventListener('click', function(){ 
-      var newRect = new createTriangle();
-      shapes.push(newRect);
-    });
-    // 삼각형 버튼 클릭했을 때
-    document.getElementById('line').addEventListener('click', function(){ 
-      var newRect = new createLine();
-      shapes.push(newRect);
-    });
-    // text 버튼 클릭했을 때
-    document.getElementById('text').addEventListener('click', function(){ 
-      var newRect = new createText();
-      shapes.push(newRect);
-    });
-    // 이미지 버튼 클릭했을 때
-    document.getElementById('theImg').addEventListener('change', function(e){
-      var newRect = new createImg();
-      shapes.push(newRect);
-    });
-    // 배경 버튼 클릭했을 때
-    document.getElementById('background').addEventListener('change', function(e){
-      var newRect = new createBack();
-      shapes.push(newRect);
-    });
-    // PDF 파일 보내기/ jsPDF 외부 라이브러리 사용
-    document.getElementById('savePDF').addEventListener('click', function(){ 
-      var newRect = new createPdf();
-      shapes.push(newRect);
-    });
-
-    function fnDel(){
-      /* 마우스 오른쪽 메뉴 변수 */
-      var context = document.getElementById("context-menus");
-    
-      /* 마우스 클릭 리스너를 초기 실행시킨다. */
-      rightMouseListener();
-      leftMouseListener();
-      /* 마우스 왼클릭 감지 */
-      function leftMouseListener() {
-        document.addEventListener("click", function(e) {
-          toggleOnOff(0);
-        })
-      }
-      /* 마우스 우클릭 감지 */
-      function rightMouseListener() {
-        document.addEventListener("contextmenu", function(e) {
-          event.preventDefault();
-          toggleOnOff(1);
-          showMenu(e.x, e.y);
-        });
-      }
-      /* 마우스 메뉴 on & off */
-      function toggleOnOff(num) {
-        num === 1 ? context.classList.add("active") : context.classList.remove("active");
-      }
-      /* 마우스 클릭한 지점에서 메뉴 보여줌 */
-      function showMenu(x, y) {
-        context.style.top = y + "px";
-        context.style.left = x + "px";
-      }
-    }
-
-    
-
-    // 사각형 관련 function
-    function createSquare() {
-      var square = new Konva.Rect ({
-        x: 50,
-        y: 50,
-        width: 100,
-        height: 100,
-        fill: '#008000',
-        draggable: true, // 움직이게
-        name: 'shapeSquare',
-      });
-      var tr1 = new Konva.Transformer({
-        name: 'tr1Square',
-      });
-      layer.add(square);
-      stage.add(layer);
-      layer.add(tr1);
-      tr1.nodes([square]);
-
-      fnClick();
-      fnNodes();
-      fnColor();
-      fnAllDel();
-      fnBackey();
-      fnDelSquare();
-
-      // click function
-      function fnClick(){
-        square.on('click', function(e){
-          tr1.nodes([square]); // tr1 나오게
-        });
-        document.getElementById('square').addEventListener('click', function(){
-          tr1.nodes([]); // tr1 없애기
-        });
-      }
-      // tr1 없애는 function
-      function fnNodes(){
-        function getDistance(rect, p) {
-          var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
-          var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
-          return Math.sqrt(dx*dx + dy*dy); // Math.sqrt()숫자의 제곱근을 반환
-        }
-        stage.on('click', function() {
-          const rect = square.getClientRect(); // 테두리박스 반환
-          const dist = getDistance(rect, stage.getPointerPosition());
-          // getPointerPosition => 마우스 포인터 위치
-          if (dist > 0) {
-            tr1.nodes([]);
-          }
-        });
-        // 다른 도형 tr 사라지게 만들기
-        var transform = stage.find('Transformer')
-        transform.forEach(function(item){
-          if(item.attrs.name !== 'tr1Square') {
-            item.nodes([]);
-          }
-        });
-      }
-      // color function
-      function fnColor(){
-        // color버튼 클릭시 color 변경
-        document.getElementById('color').addEventListener('change', function(){
-          if(tr1._nodes[0] == square){
-            square.fill((color == null)? '#4169e1' : color);
-          }
-        });
-        // 클릭한 색상으로 input color 변경
-        square.on('click', function(e){
-          var targetColor = e.target.attrs.fill;
-          document.getElementById('color').value = targetColor;
-        });
-        // sqare버튼 클릭시 input color 변경
-        document.getElementById('color').value = square.attrs.fill;
-      }
-      // 전체삭제 function
-      function fnAllDel(){
-        document.getElementById('del').addEventListener('click', function(){
-          square.destroy(); // destroy=> konva에서 삭제
-          tr1.destroy();
-        });
-      }
-      // Backspace key function
-      function fnBackey(){
-        container.focus(); // focus 잡히게
-        container.addEventListener('keydown', function (e) {
-          var key = e.key;
-          if(tr1._nodes[0] == square){
-            if(key == "Backspace"){
-              square.destroy();
-              tr1.destroy();
-            }
-          }
-        });
-      }
-      // 오른쪽 마우스 클릭
-      function fnDelSquare(){
-        square.on('click', function(e){
-          fnDel();
-          document.getElementById('context-del').addEventListener('click', function(){ 
-            if(tr1._nodes[0] == square){
-              square.destroy();
-              tr1.destroy();
-            } 
-          });
-        });
-      }
-    }
-
-    // 원형 관련 function
-    function createCircle() {
-      var circle = new Konva.Circle({
-        x: 250,
-        y: 100,
-        width: 100,
-        height: 100,
-        fill: '#4169e1',
-        draggable: true, // 움직이게
-        name: 'shapeCircle',
-      });
-      var tr2 = new Konva.Transformer({
-        name: 'tr2Circle',
-      });
-      layer.add(circle);
-      stage.add(layer);
-      layer.add(tr2);
-      tr2.nodes([circle]);
-
-      fnClick();
-      fnNodes();
-      fnColor();
-      fnAllDel();
-      fnBackey();
-      fnDelSquare();
-
-      // click function
-      function fnClick(){
-        circle.on('click', function(e){
-          tr2.nodes([circle]); // tr2 나오게
-        });
-        document.getElementById('circle').addEventListener('click', function(){
-          tr2.nodes([]); // tr2 없애기
-        });
-      }
-      // tr2 없애는 function
-      function fnNodes(){
-        function getDistance(rect, p) {
-          var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
-          var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
-          return Math.sqrt(dx*dx + dy*dy); // Math.sqrt()숫자의 제곱근을 반환
-        }
-        stage.on('click', function() {
-          const rect = circle.getClientRect(); // 테두리박스 반환
-          const dist = getDistance(rect, stage.getPointerPosition());
-          // getPointerPosition => 마우스 포인터 위치
-          if (dist > 0) {
-            tr2.nodes([]);
-          }
-        });
-        // 다른 도형 tr 사라지게 만들기
-        var transform = stage.find('Transformer')
-        transform.forEach(function(item){
-          if(item.attrs.name !== 'tr2Circle') {
-            item.nodes([]);
-          }
-        });
-      }
-      // color function
-      function fnColor(){
-        // color버튼 클릭시 color 변경
-        document.getElementById('color').addEventListener('change', function(){
-          if(tr2._nodes[0] == circle){
-            circle.fill((color == null)? '#4169e1' : color);
-          }
-        });
-        // 클릭한 색상으로 input color 변경
-        circle.on('click', function(e){
-          var targetColor = e.target.attrs.fill;
-          document.getElementById('color').value = targetColor;
-        });
-        // sqare버튼 클릭시 input color 변경
-        document.getElementById('color').value = circle.attrs.fill;
-      }
-      // 전체삭제 function
-      function fnAllDel(){
-        document.getElementById('del').addEventListener('click', function(){
-          circle.destroy(); // destroy=> konva에서 삭제
-          tr2.destroy();
-        });
-      }
-      // Backspace key function
-      function fnBackey(){
-        container.focus(); // focus 잡히게
-        container.addEventListener('keydown', function (e) {
-          var key = e.key;
-          if(tr2._nodes[0] == circle){
-            if(key == "Backspace"){
-              circle.destroy();
-              tr2.destroy();
-            }
-          }
-        });
-      }
-      // 오른쪽 마우스 클릭
-      function fnDelSquare(){
-        circle.on('click', function(e){
-          fnDel();
-          document.getElementById('context-del').addEventListener('click', function(){ 
-            if(tr2._nodes[0] == circle){
-              circle.destroy();
-              tr2.destroy();
-            } 
-          });
-        });
-      }
-    }
-    // 삼각형 관련 function
-    function createTriangle() {
-      var triangle = new Konva.RegularPolygon({
-        x: 400,
-        y: 110,
-        sides: 3, // 꼭지점 개수
-        radius: 60,  //크기
-        fill: '#d87093',
-        draggable: true, // 움직이게
-        name: 'shapeTriangle',
-      });
-      var tr3 = new Konva.Transformer({
-        name: 'tr3Triangle',
-      });
-      layer.add(triangle);
-      stage.add(layer);
-      layer.add(tr3);
-      tr3.nodes([triangle]);
-
-      fnClick();
-      fnNodes();
-      fnColor();
-      fnAllDel();
-      fnBackey();
-      fnDelSquare();
-
-      // click function
-      function fnClick(){
-        triangle.on('click', function(e){
-          tr3.nodes([triangle]); // tr3 나오게
-        });
-        document.getElementById('triangle').addEventListener('click', function(){
-          tr3.nodes([]); // tr3 없애기
-        });
-      }
-      // tr3 없애는 function
-      function fnNodes(){
-        function getDistance(rect, p) {
-          var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
-          var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
-          return Math.sqrt(dx*dx + dy*dy); // Math.sqrt()숫자의 제곱근을 반환
-        }
-        stage.on('click', function() {
-          const rect = triangle.getClientRect(); // 테두리박스 반환
-          const dist = getDistance(rect, stage.getPointerPosition());
-          // getPointerPosition => 마우스 포인터 위치
-          if (dist > 0) {
-            tr3.nodes([]);
-          }
-        });
-        // 다른 도형 tr 사라지게 만들기
-        var transform = stage.find('Transformer')
-        transform.forEach(function(item){
-          if(item.attrs.name !== 'tr3Triangle') {
-            item.nodes([]);
-          }
-        });
-      }
-      // color function
-      function fnColor(){
-        // color버튼 클릭시 color 변경
-        document.getElementById('color').addEventListener('change', function(){
-          if(tr3._nodes[0] == triangle){
-            triangle.fill((color == null)? '#4169e1' : color);
-          }
-        });
-        // 클릭한 색상으로 input color 변경
-        triangle.on('click', function(e){
-          var targetColor = e.target.attrs.fill;
-          document.getElementById('color').value = targetColor;
-        });
-        // sqare버튼 클릭시 input color 변경
-        document.getElementById('color').value = triangle.attrs.fill;
-      }
-      // 전체삭제 function
-      function fnAllDel(){
-        document.getElementById('del').addEventListener('click', function(){
-          triangle.destroy(); // destroy=> konva에서 삭제
-          tr3.destroy();
-        });
-      }
-      // Backspace key function
-      function fnBackey(){
-        container.focus(); // focus 잡히게
-        container.addEventListener('keydown', function (e) {
-          var key = e.key;
-          if(tr3._nodes[0] == triangle){
-            if(key == "Backspace"){
-              triangle.destroy();
-              tr3.destroy();
-            }
-          }
-        });
-      }
-      // 오른쪽 마우스 클릭
-      function fnDelSquare(){
-        triangle.on('click', function(e){
-          fnDel();
-          document.getElementById('context-del').addEventListener('click', function(){ 
-            if(tr3._nodes[0] == triangle){
-              triangle.destroy();
-              tr3.destroy();
-            } 
-          });
-        });
-      }
-    }
-    // 선 관련 function
-    function createLine() {
-      var line = new Konva.Line({
-        x: 500,
-        y: 100,
-        points: [0, 0, 100, 0], // 포인트 지점
-        stroke: '#800080',
-        strokeWidth: 5, // 선 두께
-        draggable: true, // 움직이게
-        name: 'shapeLine',
-      });
-      var tr4 = new Konva.Transformer({
-        name: 'tr4Line',
-        enabledAnchors: ['middle-left', 'middle-right'], //조절기 왼쪽 오른쪽만
-      });
-      layer.add(line);
-      stage.add(layer);
-      layer.add(tr4);
-      tr4.nodes([line]);
-
-      fnClick();
-      fnNodes();
-      fnColor();
-      fnAllDel();
-      fnBackey();
-      fnDelSquare();
-
-      // click function
-      function fnClick(){
-        line.on('click', function(e){
-          tr4.nodes([line]); // tr4 나오게
-        });
-        document.getElementById('line').addEventListener('click', function(){
-          tr4.nodes([]); // tr4 없애기
-        });
-      }
-      // tr4 없애는 function
-      function fnNodes(){
-        function getDistance(rect, p) {
-          var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
-          var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
-          return Math.sqrt(dx*dx + dy*dy); // Math.sqrt()숫자의 제곱근을 반환
-        }
-        stage.on('click', function() {
-          const rect = line.getClientRect(); // 테두리박스 반환
-          const dist = getDistance(rect, stage.getPointerPosition());
-          // getPointerPosition => 마우스 포인터 위치
-          if (dist > 0) {
-            tr4.nodes([]);
-          }
-        });
-        // 다른 도형 tr 사라지게 만들기
-        var transform = stage.find('Transformer')
-        transform.forEach(function(item){
-          if(item.attrs.name !== 'tr4Line') {
-            item.nodes([]);
-          }
-        });
-      }
-      // color function
-      function fnColor(){
-        // color버튼 클릭시 color 변경
-        document.getElementById('color').addEventListener('change', function(){
-          if(tr4._nodes[0] == line){
-            line.stroke((color == null)? '#4169e1' : color);
-          }
-        });
-        // 클릭한 색상으로 input color 변경
-        line.on('click', function(e){
-          var targetColor = e.target.attrs.stroke;
-          document.getElementById('color').value = targetColor;
-        });
-        // sqare버튼 클릭시 input color 변경
-        document.getElementById('color').value = line.attrs.stroke;
-      }
-      // 전체삭제 function
-      function fnAllDel(){
-        document.getElementById('del').addEventListener('click', function(){
-          line.destroy(); // destroy=> konva에서 삭제
-          tr4.destroy();
-        });
-      }
-      // Backspace key function
-      function fnBackey(){
-        container.focus(); // focus 잡히게
-        container.addEventListener('keydown', function (e) {
-          var key = e.key;
-          if(tr4._nodes[0] == line){
-            if(key == "Backspace"){
-              line.destroy();
-              tr4.destroy();
-            }
-          }
-        });
-      }
-      // 오른쪽 마우스 클릭
-      function fnDelSquare(){
-        line.on('click', function(e){
-          fnDel();
-          document.getElementById('context-del').addEventListener('click', function(){ 
-            if(tr4._nodes[0] == line){
-              line.destroy();
-              tr4.destroy();
-            } 
-          });
-        });
-      }
-    }
-    // 텍스트 관련 function
-    function createText() {
-      var textNode = new Konva.Text({
-        text: 'Some text here', // 기존 text
-        x: 50, // x측 위치
-        y: 80, // y측 위치
-        fontSize: 18,
-        fontFamily: 'Arial', // font 종류
-        fontStyle: '500',
-        fill: '#000000',
-        width: 200, // 가로 길이
-        draggable: true, // 움직이게
-        name: 'shapeText',
-      });
-      var tr5 = new Konva.Transformer({
-        name: 'tr5TextNode',
-        enabledAnchors: ['middle-left', 'middle-right'], //조절기 왼쪽 오른쪽만
-        nodes: [textNode],
-        boundBoxFunc: function (oldBox, newBox) {
-          newBox.width = Math.max(30, newBox.width);
-          return newBox;
-        }
-      });
-      layer.add(textNode);
-      stage.add(layer);
-      layer.add(tr5);
-      tr5.nodes([textNode]);
-
-      fnClick();
-      fnNodes();
-      fnColor();
-      fnAllDel();
-      fnBackey();
-      fnText();
-      fnDelSquare();
-
-      // click function
-      function fnClick(){
-        textNode.on('click', function(e){
-          tr5.nodes([textNode]); // tr5 나오게
-          // 클릭한 색상으로 input color 변경
-          var targetColor = e.target.attrs.fill;
-          document.getElementById('color').value = targetColor;
-          // 클릭한 폰트로 select 값 변경
-          var targetFont = e.target.attrs.fontFamily;
-          document.getElementById('fontFamily').value = targetFont;
-          // 클릭한 사이즈로 select 값 변경
-          var fontSize = e.target.attrs.fontSize;
-          document.getElementById('fontSize').value = fontSize;
-          // 클릭한 굵기로 select 값 변경
-          var fontWeight = e.target.attrs.fontStyle;
-          document.getElementById('fontWeight').value = fontWeight;
-        });
-        document.getElementById('text').addEventListener('click', function(){
-          tr5.nodes([]); // tr5 없애기
-        });
-      }
-      // tr5 없애는 function
-      function fnNodes(){
-        function getDistance(rect, p) {
-          var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
-          var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
-          return Math.sqrt(dx*dx + dy*dy); // Math.sqrt()숫자의 제곱근을 반환
-        }
-        stage.on('click', function() {
-          var rect = textNode.getClientRect(); // 테두리박스 반환
-          var dist = getDistance(rect, stage.getPointerPosition());
-          // getPointerPosition => 마우스 포인터 위치
-          if (dist > 0) {
-            tr5.nodes([]);
-          }
-        });
-        // 다른 도형 tr 사라지게 만들기
-        var transform = stage.find('Transformer')
-        transform.forEach(function(item){
-          if(item.attrs.name !== 'tr5TextNode') {
-            item.nodes([]);
-          }
-        });
-      }
-      function fnText(){
-        var selFontSize = document.getElementById('fontSize');
-        var selFontFamily = document.getElementById('fontFamily');
-        var selFontWeight = document.getElementById('fontWeight');
-
-        fnSize();
-        fnFamily();
-        fnWeight();
-        fnTextNode();
-
-        // 클릭한 fontsize 사이즈 변경
-        function fnSize(){
-          document.getElementById('fontSize').addEventListener('change', function(){
-            if(tr5._nodes[0] == textNode){
-              textNode.fontSize(selFontSize.value);
-            }
-          });
-        }
-        // 클릭한 fontFamily 폰트 변경
-        function fnFamily(){
-          document.getElementById('fontFamily').addEventListener('change', function(){
-            if(tr5._nodes[0] == textNode){
-              textNode.fontFamily(selFontFamily.value);
-            }
-          });
-        }
-        // 클릭한 fontWeight 굵기 변경
-        function fnWeight(){
-          document.getElementById('fontWeight').addEventListener('change', function(){
-            if(tr5._nodes[0] == textNode){
-              textNode.fontStyle(selFontWeight.value);
-            }
-          });
-        }
-        // textNode 더블 클릭하면
-        function fnTextNode(){
-          textNode.on('dblclick dbltap', function() {
-            textNode.hide(); //textNode 안보이게
-            tr5.hide(); //tr5 안보이게
-            // 더블 클릭하면 textarea로 보이게 하기
-            var textPosition = textNode.absolutePosition();
-            var areaPosition = {
-              x: stage.container().offsetLeft + textPosition.x,
-              y: stage.container().offsetTop + textPosition.y,
-            };
-            var textarea = document.createElement('textarea');
-            document.body.appendChild(textarea);
-            // 텍스트 스타일이랑 같게 적용
-            textarea.value = textNode.text();
-            textarea.style.position = 'absolute';
-            textarea.style.top = areaPosition.y + 'px';
-            textarea.style.left = areaPosition.x + 'px';
-            textarea.style.width = textNode.width() - textNode.padding() * 2 + 'px';
-            textarea.style.height = textNode.height() - textNode.padding() * 2 + 5 + 'px';
-            textarea.style.fontSize = textNode.fontSize() + 'px';
-            textarea.style.border = 'none';
-            textarea.style.padding = '0px';
-            textarea.style.margin = '0px';
-            textarea.style.overflow = 'hidden';
-            textarea.style.background = 'none';
-            textarea.style.outline = 'none';
-            textarea.style.resize = 'none';
-            textarea.style.lineHeight = textNode.lineHeight();
-            textarea.style.fontFamily = textNode.fontFamily();
-            textarea.style.transformOrigin = 'left top';
-            textarea.style.textAlign = textNode.align();
-            textarea.style.color = textNode.fill();
-            rotation = textNode.rotation();
-            var transform = '';
-            if (rotation) {
-              transform += 'rotateZ(' + rotation + 'deg)';
-            }
-            var px = 0;
-            var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-            if (isFirefox) {
-              px += 2 + Math.round(textNode.fontSize() / 20);
-            }
-            transform += 'translateY(-' + px + 'px)';
-            textarea.style.transform = transform;
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 3 + 'px';
-            textarea.focus();
-
-            function removeTextarea() {
-              textarea.parentNode.removeChild(textarea);
-              window.removeEventListener('click', handleOutsideClick);
-              textNode.show();
-              tr5.show();
-              tr5.forceUpdate();
-            }
-            function setTextareaWidth(newWidth) {
-              if (!newWidth) {
-                newWidth = textNode.placeholder.length * textNode.fontSize();
-              }
-              var isSafari = /^((?!chrome|android).)*safari/i.test(
-                navigator.userAgent
-              );
-              var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
-              if (isSafari || isFirefox) {
-                newWidth = Math.ceil(newWidth);
-              }
-              var isEdge = document.documentMode || /Edge/.test(navigator.userAgent);
-              if (isEdge) {
-                newWidth += 1;
-              }
-              textarea.style.width = newWidth + 'px';
-            }
-            textarea.addEventListener('keydown', function (e) {
-              if (e.keyCode === 13 && !e.shiftKey) {
-                textNode.text(textarea.value);
-                removeTextarea();
-              }
-              if (e.keyCode === 27) {
-                removeTextarea();
-              }
+            var stage = new Konva.Stage({
+                container: 'container',
+                width: width,
+                height: height,
             });
-            // 높이 재 설정
-            textarea.addEventListener('keydown', function (e) {
-              scale = textNode.getAbsoluteScale().x;
-              setTextareaWidth(textNode.width() * scale);
-              textarea.style.height = 'auto';
-              textarea.style.height =
-              textarea.scrollHeight + textNode.fontSize() + 'px';
+            var layer = new Konva.Layer();
+            stage.add(layer);
+
+            // container focus
+            var container = stage.container();
+            container.tabIndex = 1; // tabIndex => 스테이지 컨테이너를 포커스 가능하게 하는 event
+
+            // 사각형 버튼 클릭했을 때
+            document.getElementById('square').addEventListener('click', function () {
+                var newRect = new createSquare();
+                shapes.push(newRect);
             });
-            // 다시 클릭하면 텍스트 크기 조절 나오기
-            function handleOutsideClick(e) {
-              if (e.target !== textarea) {
-                textNode.text(textarea.value);
-                removeTextarea();
-              }
-            }
-            setTimeout(function() {
-              window.addEventListener('click', handleOutsideClick);
+            // 원형 버튼 클릭했을 때
+            document.getElementById('circle').addEventListener('click', function () {
+                var newRect = new createCircle();
+                shapes.push(newRect);
             });
-          });
-        }
-      }
-      // color function
-      function fnColor(){
-        // color버튼 클릭시 color 변경
-        document.getElementById('color').addEventListener('change', function(){
-          if(tr5._nodes[0] == textNode){
-            textNode.fill((color == null)? '#4169e1' : color);
-          }
-        });
-        // 클릭한 색상으로 input color 변경
-        textNode.on('click', function(e){
-          var targetColor = e.target.attrs.fill;
-          document.getElementById('color').value = targetColor;
-        });
-        // sqare버튼 클릭시 input color 변경
-        document.getElementById('color').value = textNode.attrs.fill;
-      }
-      // 전체삭제 function
-      function fnAllDel(){
-        document.getElementById('del').addEventListener('click', function(){
-          textNode.destroy(); // destroy=> konva에서 삭제
-          tr5.destroy();
-        });
-      }
-      // Backspace key function
-      function fnBackey(){
-        container.focus(); // focus 잡히게
-        container.addEventListener('keydown', function (e) {
-          var key = e.key;
-          if(tr5._nodes[0] == textNode){
-            if(key == "Backspace"){
-              textNode.destroy();
-              tr5.destroy();
-            }
-          }
-        });
-      }
-      // 오른쪽 마우스 클릭
-      function fnDelSquare(){
-        textNode.on('click', function(e){
-          fnDel();
-          document.getElementById('context-del').addEventListener('click', function(){ 
-            if(tr5._nodes[0] == textNode){
-              textNode.destroy();
-              tr5.destroy();
-            } 
-          });
-        });
-      }
-    }
-    // 이미지 관련 function
-    function createImg(e) {
-      var inputImg = document.getElementById("theImg");
-      var URL = window.webkitURL || window.URL;
-      var url = URL.createObjectURL(inputImg.files[0]);
-      var img = new Image();
-      img.src = url;
-
-      img.onload = function(){
-        var img_width = img.width;
-        var img_height = img.height;
-        var max = 200;
-        var ratio = (img_width > img_height ? (img_width / max) : (img_height / max))
-
-        var theImg = new Konva.Image({
-          name: 'rect',
-          image: img,
-          x: 100,
-          y: 50,
-          width: img_width/ratio,  //이미지 width
-          height: img_height/ratio,  //이미지 height
-          draggable: true,
-        });
-        var tr6 = new Konva.Transformer({
-          name: 'tr6TheImg',
-        });
-        layer.add(theImg);
-        shapes.push(theImg);
-        layer.add(tr6);
-        tr6.nodes([theImg]);
-
-        fnClick();
-        fnNodes();
-        fnAllDel();
-        fnBackey();
-        fnDelSquare();
-
-        // click function
-        function fnClick(e){
-          theImg.on('click', function(e){
-            tr6.nodes([theImg]); // tr6 나오게
-          });
-          document.getElementById('theImg').addEventListener('click', function(){
-            tr6.nodes([]); // tr6 없애기
-          });
-        }
-        // tr6 없애는 function
-        function fnNodes(){
-          function getDistance(rect, p) {
-            var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
-            var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
-            return Math.sqrt(dx*dx + dy*dy); // Math.sqrt()숫자의 제곱근을 반환
-          }
-          stage.on('click', function() {
-            const rect = theImg.getClientRect(); // 테두리박스 반환
-            const dist = getDistance(rect, stage.getPointerPosition());
-            // getPointerPosition => 마우스 포인터 위치
-            if (dist > 0) {
-              tr6.nodes([]);
-            }
-          });
-          // 다른 도형 tr 사라지게 만들기
-          var transform = stage.find('Transformer')
-          transform.forEach(function(item){
-            if(item.attrs.name !== 'tr6TheImg') {
-              item.nodes([]);
-            }
-          });
-        }
-        // 전체삭제 function
-        function fnAllDel(){
-          document.getElementById('del').addEventListener('click', function(){
-            theImg.destroy(); // destroy=> konva에서 삭제
-            tr6.destroy();
-          });
-        }
-        // Backspace key function
-        function fnBackey(){
-          container.focus(); // focus 잡히게
-          container.addEventListener('keydown', function (e) {
-            var key = e.key;
-            if(tr6._nodes[0] == theImg){
-              if(key == "Backspace"){
-                theImg.destroy();
-                tr6.destroy();
-              }
-            }
-          });
-        }
-        // 오른쪽 마우스 클릭
-        function fnDelSquare(){
-          theImg.on('click', function(e){
-            fnDel();
-            document.getElementById('context-del').addEventListener('click', function(){ 
-              if(tr6._nodes[0] == theImg){
-                theImg.destroy();
-                tr6.destroy();
-              } 
+            // 삼각형 버튼 클릭했을 때
+            document.getElementById('triangle').addEventListener('click', function () {
+                var newRect = new createTriangle();
+                shapes.push(newRect);
             });
-          });
-        }
-      }
-    }
-    // 배경 관련 function
-    function createBack() {
-      var inputImg = document.getElementById("background");
-      var URL = window.webkitURL || window.URL;
-      var url = URL.createObjectURL(inputImg.files[0]);
-      var img = new Image();
-      img.src = url;
+            // 삼각형 버튼 클릭했을 때
+            document.getElementById('line').addEventListener('click', function () {
+                var newRect = new createLine();
+                shapes.push(newRect);
+            });
+            // text 버튼 클릭했을 때
+            document.getElementById('text').addEventListener('click', function () {
+                var newRect = new createText();
+                shapes.push(newRect);
+            });
+            // 이미지 버튼 클릭했을 때
+            document.getElementById('theImg').addEventListener('change', function (e) {
+                var newRect = new createImg();
+                shapes.push(newRect);
+            });
+            // 배경 버튼 클릭했을 때
+            document.getElementById('background').addEventListener('change', function (e) {
+                var newRect = new createBack();
+                shapes.push(newRect);
+            });
+            // PDF 파일 보내기/ jsPDF 외부 라이브러리 사용
+            document.getElementById('savePDF').addEventListener('click', function () {
+                var newRect = new createPdf();
+                shapes.push(newRect);
+            });
 
-      img.onload = function(){
-        var img_width = img.width;
-        var img_height = img.height;
-        var max_width= 1400; 
-        var max_height = 500;
-        var ratio = (img_width > img_height ? (img_width / max_width) : (img_height / max_height))
+            function fnDel() {
+                /* 마우스 오른쪽 메뉴 변수 */
+                var context = document.getElementById('context-menus');
 
-        var theImg = new Konva.Image({
-          name: 'rect',
-          image: img,
-          x: 0,
-          y: 0,
-          width: img_width/ratio,  //이미지 width
-          height: img_height/ratio,  //이미지 height
-          fillLinearGradientStartPoint: { x: 0, y: 0 },
-          fillLinearGradientEndPoint: { x: stage.width(), y: stage.height() },
-        });
-        layer.add(theImg);
-        shapes.push(theImg);
-        theImg.setZIndex(0); //index 0 맨 뒤로
+                /* 마우스 클릭 리스너를 초기 실행시킨다. */
+                rightMouseListener();
+                leftMouseListener();
+                /* 마우스 왼클릭 감지 */
+                function leftMouseListener() {
+                    document.addEventListener('click', function (e) {
+                        toggleOnOff(0);
+                    });
+                }
+                /* 마우스 우클릭 감지 */
+                function rightMouseListener() {
+                    document.addEventListener('contextmenu', function (e) {
+                        event.preventDefault();
+                        toggleOnOff(1);
+                        showMenu(e.x, e.y);
+                    });
+                }
+                /* 마우스 메뉴 on & off */
+                function toggleOnOff(num) {
+                    num === 1 ? context.classList.add('active') : context.classList.remove('active');
+                }
+                /* 마우스 클릭한 지점에서 메뉴 보여줌 */
+                function showMenu(x, y) {
+                    context.style.top = y + 'px';
+                    context.style.left = x + 'px';
+                }
+            }
 
-        centreRectShape(theImg);
-        fnAllDel();
+            // 사각형 관련 function
+            function createSquare() {
+                var square = new Konva.Rect({
+                    x: 50,
+                    y: 50,
+                    width: 100,
+                    height: 100,
+                    fill: '#008000',
+                    draggable: true, // 움직이게
+                    name: 'shapeSquare',
+                });
+                var tr1 = new Konva.Transformer({
+                    name: 'tr1Square',
+                });
+                layer.add(square);
+                stage.add(layer);
+                layer.add(tr1);
+                tr1.nodes([square]);
 
-        // 가운데 정렬 function
-        function centreRectShape(shape){
-          shape.x( ( stage.getWidth() - shape.getWidth() ) / 2);
-        }
-        // 전체삭제 function
-        function fnAllDel(){
-          document.getElementById('del').addEventListener('click', function(){
-            theImg.destroy(); // destroy=> konva에서 삭제
-          });
-        }
-      }
-    }
-    function createPdf(){
-      var pdf = new jsPDF('l', 'px', [stage.width(), stage.height()]);
-      pdf.setTextColor('#000000'); //pdf 텍스트 추가
-       // 이미지 보이게 하기
-      pdf.addImage(
-        stage.toDataURL({ pixelRatio: 2 }), // pixelRatio => 노드를 이미지로 변환할 때 사용, 500X500 = 1
-        0,
-        0,
-        stage.width(),
-        stage.height()
-      );
-      pdf.save('custom.pdf');
-    }
+                fnClick();
+                fnNodes();
+                fnColor();
+                fnAllDel();
+                fnBackey();
+                fnDelSquare();
 
-    
-   
+                // click function
+                function fnClick() {
+                    square.on('click', function (e) {
+                        tr1.nodes([square]); // tr1 나오게
+                    });
+                    document.getElementById('square').addEventListener('click', function () {
+                        tr1.nodes([]); // tr1 없애기
+                    });
+                }
+                // tr1 없애는 function
+                function fnNodes() {
+                    function getDistance(rect, p) {
+                        var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
+                        var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
+                        return Math.sqrt(dx * dx + dy * dy); // Math.sqrt()숫자의 제곱근을 반환
+                    }
+                    stage.on('click', function () {
+                        const rect = square.getClientRect(); // 테두리박스 반환
+                        const dist = getDistance(rect, stage.getPointerPosition());
+                        // getPointerPosition => 마우스 포인터 위치
+                        if (dist > 0) {
+                            tr1.nodes([]);
+                        }
+                    });
+                    // 다른 도형 tr 사라지게 만들기
+                    var transform = stage.find('Transformer');
+                    transform.forEach(function (item) {
+                        if (item.attrs.name !== 'tr1Square') {
+                            item.nodes([]);
+                        }
+                    });
+                }
+                // color function
+                function fnColor() {
+                    // color버튼 클릭시 color 변경
+                    document.getElementById('color').addEventListener('change', function () {
+                        if (tr1._nodes[0] == square) {
+                            square.fill(color == null ? '#4169e1' : color);
+                        }
+                    });
+                    // 클릭한 색상으로 input color 변경
+                    square.on('click', function (e) {
+                        var targetColor = e.target.attrs.fill;
+                        document.getElementById('color').value = targetColor;
+                    });
+                    // sqare버튼 클릭시 input color 변경
+                    document.getElementById('color').value = square.attrs.fill;
+                }
+                // 전체삭제 function
+                function fnAllDel() {
+                    document.getElementById('del').addEventListener('click', function () {
+                        square.destroy(); // destroy=> konva에서 삭제
+                        tr1.destroy();
+                    });
+                }
+                // Backspace key function
+                function fnBackey() {
+                    container.focus(); // focus 잡히게
+                    container.addEventListener('keydown', function (e) {
+                        var key = e.key;
+                        if (tr1._nodes[0] == square) {
+                            if (key == 'Backspace') {
+                                square.destroy();
+                                tr1.destroy();
+                            }
+                        }
+                    });
+                }
+                // 오른쪽 마우스 클릭
+                function fnDelSquare() {
+                    square.on('click', function (e) {
+                        fnDel();
+                        document.getElementById('context-del').addEventListener('click', function () {
+                            if (tr1._nodes[0] == square) {
+                                square.destroy();
+                                tr1.destroy();
+                            }
+                        });
+                    });
+                }
+            }
 
+            // 원형 관련 function
+            function createCircle() {
+                var circle = new Konva.Circle({
+                    x: 250,
+                    y: 100,
+                    width: 100,
+                    height: 100,
+                    fill: '#4169e1',
+                    draggable: true, // 움직이게
+                    name: 'shapeCircle',
+                });
+                var tr2 = new Konva.Transformer({
+                    name: 'tr2Circle',
+                });
+                layer.add(circle);
+                stage.add(layer);
+                layer.add(tr2);
+                tr2.nodes([circle]);
 
-    stage.draw();
+                fnClick();
+                fnNodes();
+                fnColor();
+                fnAllDel();
+                fnBackey();
+                fnDelSquare();
 
-    
+                // click function
+                function fnClick() {
+                    circle.on('click', function (e) {
+                        tr2.nodes([circle]); // tr2 나오게
+                    });
+                    document.getElementById('circle').addEventListener('click', function () {
+                        tr2.nodes([]); // tr2 없애기
+                    });
+                }
+                // tr2 없애는 function
+                function fnNodes() {
+                    function getDistance(rect, p) {
+                        var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
+                        var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
+                        return Math.sqrt(dx * dx + dy * dy); // Math.sqrt()숫자의 제곱근을 반환
+                    }
+                    stage.on('click', function () {
+                        const rect = circle.getClientRect(); // 테두리박스 반환
+                        const dist = getDistance(rect, stage.getPointerPosition());
+                        // getPointerPosition => 마우스 포인터 위치
+                        if (dist > 0) {
+                            tr2.nodes([]);
+                        }
+                    });
+                    // 다른 도형 tr 사라지게 만들기
+                    var transform = stage.find('Transformer');
+                    transform.forEach(function (item) {
+                        if (item.attrs.name !== 'tr2Circle') {
+                            item.nodes([]);
+                        }
+                    });
+                }
+                // color function
+                function fnColor() {
+                    // color버튼 클릭시 color 변경
+                    document.getElementById('color').addEventListener('change', function () {
+                        if (tr2._nodes[0] == circle) {
+                            circle.fill(color == null ? '#4169e1' : color);
+                        }
+                    });
+                    // 클릭한 색상으로 input color 변경
+                    circle.on('click', function (e) {
+                        var targetColor = e.target.attrs.fill;
+                        document.getElementById('color').value = targetColor;
+                    });
+                    // sqare버튼 클릭시 input color 변경
+                    document.getElementById('color').value = circle.attrs.fill;
+                }
+                // 전체삭제 function
+                function fnAllDel() {
+                    document.getElementById('del').addEventListener('click', function () {
+                        circle.destroy(); // destroy=> konva에서 삭제
+                        tr2.destroy();
+                    });
+                }
+                // Backspace key function
+                function fnBackey() {
+                    container.focus(); // focus 잡히게
+                    container.addEventListener('keydown', function (e) {
+                        var key = e.key;
+                        if (tr2._nodes[0] == circle) {
+                            if (key == 'Backspace') {
+                                circle.destroy();
+                                tr2.destroy();
+                            }
+                        }
+                    });
+                }
+                // 오른쪽 마우스 클릭
+                function fnDelSquare() {
+                    circle.on('click', function (e) {
+                        fnDel();
+                        document.getElementById('context-del').addEventListener('click', function () {
+                            if (tr2._nodes[0] == circle) {
+                                circle.destroy();
+                                tr2.destroy();
+                            }
+                        });
+                    });
+                }
+            }
+            // 삼각형 관련 function
+            function createTriangle() {
+                var triangle = new Konva.RegularPolygon({
+                    x: 400,
+                    y: 110,
+                    sides: 3, // 꼭지점 개수
+                    radius: 60, //크기
+                    fill: '#d87093',
+                    draggable: true, // 움직이게
+                    name: 'shapeTriangle',
+                });
+                var tr3 = new Konva.Transformer({
+                    name: 'tr3Triangle',
+                });
+                layer.add(triangle);
+                stage.add(layer);
+                layer.add(tr3);
+                tr3.nodes([triangle]);
 
+                fnClick();
+                fnNodes();
+                fnColor();
+                fnAllDel();
+                fnBackey();
+                fnDelSquare();
 
+                // click function
+                function fnClick() {
+                    triangle.on('click', function (e) {
+                        tr3.nodes([triangle]); // tr3 나오게
+                    });
+                    document.getElementById('triangle').addEventListener('click', function () {
+                        tr3.nodes([]); // tr3 없애기
+                    });
+                }
+                // tr3 없애는 function
+                function fnNodes() {
+                    function getDistance(rect, p) {
+                        var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
+                        var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
+                        return Math.sqrt(dx * dx + dy * dy); // Math.sqrt()숫자의 제곱근을 반환
+                    }
+                    stage.on('click', function () {
+                        const rect = triangle.getClientRect(); // 테두리박스 반환
+                        const dist = getDistance(rect, stage.getPointerPosition());
+                        // getPointerPosition => 마우스 포인터 위치
+                        if (dist > 0) {
+                            tr3.nodes([]);
+                        }
+                    });
+                    // 다른 도형 tr 사라지게 만들기
+                    var transform = stage.find('Transformer');
+                    transform.forEach(function (item) {
+                        if (item.attrs.name !== 'tr3Triangle') {
+                            item.nodes([]);
+                        }
+                    });
+                }
+                // color function
+                function fnColor() {
+                    // color버튼 클릭시 color 변경
+                    document.getElementById('color').addEventListener('change', function () {
+                        if (tr3._nodes[0] == triangle) {
+                            triangle.fill(color == null ? '#4169e1' : color);
+                        }
+                    });
+                    // 클릭한 색상으로 input color 변경
+                    triangle.on('click', function (e) {
+                        var targetColor = e.target.attrs.fill;
+                        document.getElementById('color').value = targetColor;
+                    });
+                    // sqare버튼 클릭시 input color 변경
+                    document.getElementById('color').value = triangle.attrs.fill;
+                }
+                // 전체삭제 function
+                function fnAllDel() {
+                    document.getElementById('del').addEventListener('click', function () {
+                        triangle.destroy(); // destroy=> konva에서 삭제
+                        tr3.destroy();
+                    });
+                }
+                // Backspace key function
+                function fnBackey() {
+                    container.focus(); // focus 잡히게
+                    container.addEventListener('keydown', function (e) {
+                        var key = e.key;
+                        if (tr3._nodes[0] == triangle) {
+                            if (key == 'Backspace') {
+                                triangle.destroy();
+                                tr3.destroy();
+                            }
+                        }
+                    });
+                }
+                // 오른쪽 마우스 클릭
+                function fnDelSquare() {
+                    triangle.on('click', function (e) {
+                        fnDel();
+                        document.getElementById('context-del').addEventListener('click', function () {
+                            if (tr3._nodes[0] == triangle) {
+                                triangle.destroy();
+                                tr3.destroy();
+                            }
+                        });
+                    });
+                }
+            }
+            // 선 관련 function
+            function createLine() {
+                var line = new Konva.Line({
+                    x: 500,
+                    y: 100,
+                    points: [0, 0, 100, 0], // 포인트 지점
+                    stroke: '#800080',
+                    strokeWidth: 5, // 선 두께
+                    draggable: true, // 움직이게
+                    name: 'shapeLine',
+                });
+                var tr4 = new Konva.Transformer({
+                    name: 'tr4Line',
+                    enabledAnchors: ['middle-left', 'middle-right'], //조절기 왼쪽 오른쪽만
+                });
+                layer.add(line);
+                stage.add(layer);
+                layer.add(tr4);
+                tr4.nodes([line]);
 
-    
-    
+                fnClick();
+                fnNodes();
+                fnColor();
+                fnAllDel();
+                fnBackey();
+                fnDelSquare();
 
-    
+                // click function
+                function fnClick() {
+                    line.on('click', function (e) {
+                        tr4.nodes([line]); // tr4 나오게
+                    });
+                    document.getElementById('line').addEventListener('click', function () {
+                        tr4.nodes([]); // tr4 없애기
+                    });
+                }
+                // tr4 없애는 function
+                function fnNodes() {
+                    function getDistance(rect, p) {
+                        var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
+                        var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
+                        return Math.sqrt(dx * dx + dy * dy); // Math.sqrt()숫자의 제곱근을 반환
+                    }
+                    stage.on('click', function () {
+                        const rect = line.getClientRect(); // 테두리박스 반환
+                        const dist = getDistance(rect, stage.getPointerPosition());
+                        // getPointerPosition => 마우스 포인터 위치
+                        if (dist > 0) {
+                            tr4.nodes([]);
+                        }
+                    });
+                    // 다른 도형 tr 사라지게 만들기
+                    var transform = stage.find('Transformer');
+                    transform.forEach(function (item) {
+                        if (item.attrs.name !== 'tr4Line') {
+                            item.nodes([]);
+                        }
+                    });
+                }
+                // color function
+                function fnColor() {
+                    // color버튼 클릭시 color 변경
+                    document.getElementById('color').addEventListener('change', function () {
+                        if (tr4._nodes[0] == line) {
+                            line.stroke(color == null ? '#4169e1' : color);
+                        }
+                    });
+                    // 클릭한 색상으로 input color 변경
+                    line.on('click', function (e) {
+                        var targetColor = e.target.attrs.stroke;
+                        document.getElementById('color').value = targetColor;
+                    });
+                    // sqare버튼 클릭시 input color 변경
+                    document.getElementById('color').value = line.attrs.stroke;
+                }
+                // 전체삭제 function
+                function fnAllDel() {
+                    document.getElementById('del').addEventListener('click', function () {
+                        line.destroy(); // destroy=> konva에서 삭제
+                        tr4.destroy();
+                    });
+                }
+                // Backspace key function
+                function fnBackey() {
+                    container.focus(); // focus 잡히게
+                    container.addEventListener('keydown', function (e) {
+                        var key = e.key;
+                        if (tr4._nodes[0] == line) {
+                            if (key == 'Backspace') {
+                                line.destroy();
+                                tr4.destroy();
+                            }
+                        }
+                    });
+                }
+                // 오른쪽 마우스 클릭
+                function fnDelSquare() {
+                    line.on('click', function (e) {
+                        fnDel();
+                        document.getElementById('context-del').addEventListener('click', function () {
+                            if (tr4._nodes[0] == line) {
+                                line.destroy();
+                                tr4.destroy();
+                            }
+                        });
+                    });
+                }
+            }
+            // 텍스트 관련 function
+            function createText() {
+                var textNode = new Konva.Text({
+                    text: 'Some text here', // 기존 text
+                    x: 50, // x측 위치
+                    y: 80, // y측 위치
+                    fontSize: 18,
+                    fontFamily: 'Arial', // font 종류
+                    fontStyle: '500',
+                    fill: '#000000',
+                    width: 200, // 가로 길이
+                    draggable: true, // 움직이게
+                    name: 'shapeText',
+                });
+                var tr5 = new Konva.Transformer({
+                    name: 'tr5TextNode',
+                    enabledAnchors: ['middle-left', 'middle-right'], //조절기 왼쪽 오른쪽만
+                    nodes: [textNode],
+                    boundBoxFunc: function (oldBox, newBox) {
+                        newBox.width = Math.max(30, newBox.width);
+                        return newBox;
+                    },
+                });
+                layer.add(textNode);
+                stage.add(layer);
+                layer.add(tr5);
+                tr5.nodes([textNode]);
 
-    
+                fnClick();
+                fnNodes();
+                fnColor();
+                fnAllDel();
+                fnBackey();
+                fnText();
+                fnDelSquare();
 
+                // click function
+                function fnClick() {
+                    textNode.on('click', function (e) {
+                        tr5.nodes([textNode]); // tr5 나오게
+                        // 클릭한 색상으로 input color 변경
+                        var targetColor = e.target.attrs.fill;
+                        document.getElementById('color').value = targetColor;
+                        // 클릭한 폰트로 select 값 변경
+                        var targetFont = e.target.attrs.fontFamily;
+                        document.getElementById('fontFamily').value = targetFont;
+                        // 클릭한 사이즈로 select 값 변경
+                        var fontSize = e.target.attrs.fontSize;
+                        document.getElementById('fontSize').value = fontSize;
+                        // 클릭한 굵기로 select 값 변경
+                        var fontWeight = e.target.attrs.fontStyle;
+                        document.getElementById('fontWeight').value = fontWeight;
+                    });
+                    document.getElementById('text').addEventListener('click', function () {
+                        tr5.nodes([]); // tr5 없애기
+                    });
+                }
+                // tr5 없애는 function
+                function fnNodes() {
+                    function getDistance(rect, p) {
+                        var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
+                        var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
+                        return Math.sqrt(dx * dx + dy * dy); // Math.sqrt()숫자의 제곱근을 반환
+                    }
+                    stage.on('click', function () {
+                        var rect = textNode.getClientRect(); // 테두리박스 반환
+                        var dist = getDistance(rect, stage.getPointerPosition());
+                        // getPointerPosition => 마우스 포인터 위치
+                        if (dist > 0) {
+                            tr5.nodes([]);
+                        }
+                    });
+                    // 다른 도형 tr 사라지게 만들기
+                    var transform = stage.find('Transformer');
+                    transform.forEach(function (item) {
+                        if (item.attrs.name !== 'tr5TextNode') {
+                            item.nodes([]);
+                        }
+                    });
+                }
+                function fnText() {
+                    var selFontSize = document.getElementById('fontSize');
+                    var selFontFamily = document.getElementById('fontFamily');
+                    var selFontWeight = document.getElementById('fontWeight');
 
+                    fnSize();
+                    fnFamily();
+                    fnWeight();
+                    fnTextNode();
 
+                    // 클릭한 fontsize 사이즈 변경
+                    function fnSize() {
+                        document.getElementById('fontSize').addEventListener('change', function () {
+                            if (tr5._nodes[0] == textNode) {
+                                textNode.fontSize(selFontSize.value);
+                            }
+                        });
+                    }
+                    // 클릭한 fontFamily 폰트 변경
+                    function fnFamily() {
+                        document.getElementById('fontFamily').addEventListener('change', function () {
+                            if (tr5._nodes[0] == textNode) {
+                                textNode.fontFamily(selFontFamily.value);
+                            }
+                        });
+                    }
+                    // 클릭한 fontWeight 굵기 변경
+                    function fnWeight() {
+                        document.getElementById('fontWeight').addEventListener('change', function () {
+                            if (tr5._nodes[0] == textNode) {
+                                textNode.fontStyle(selFontWeight.value);
+                            }
+                        });
+                    }
+                    // textNode 더블 클릭하면
+                    function fnTextNode() {
+                        textNode.on('dblclick dbltap', function () {
+                            textNode.hide(); //textNode 안보이게
+                            tr5.hide(); //tr5 안보이게
+                            // 더블 클릭하면 textarea로 보이게 하기
+                            var textPosition = textNode.absolutePosition();
+                            var areaPosition = {
+                                x: stage.container().offsetLeft + textPosition.x,
+                                y: stage.container().offsetTop + textPosition.y,
+                            };
+                            var textarea = document.createElement('textarea');
+                            document.body.appendChild(textarea);
+                            // 텍스트 스타일이랑 같게 적용
+                            textarea.value = textNode.text();
+                            textarea.style.position = 'absolute';
+                            textarea.style.top = areaPosition.y + 'px';
+                            textarea.style.left = areaPosition.x + 'px';
+                            textarea.style.width = textNode.width() - textNode.padding() * 2 + 'px';
+                            textarea.style.height = textNode.height() - textNode.padding() * 2 + 5 + 'px';
+                            textarea.style.fontSize = textNode.fontSize() + 'px';
+                            textarea.style.border = 'none';
+                            textarea.style.padding = '0px';
+                            textarea.style.margin = '0px';
+                            textarea.style.overflow = 'hidden';
+                            textarea.style.background = 'none';
+                            textarea.style.outline = 'none';
+                            textarea.style.resize = 'none';
+                            textarea.style.lineHeight = textNode.lineHeight();
+                            textarea.style.fontFamily = textNode.fontFamily();
+                            textarea.style.transformOrigin = 'left top';
+                            textarea.style.textAlign = textNode.align();
+                            textarea.style.color = textNode.fill();
+                            rotation = textNode.rotation();
+                            var transform = '';
+                            if (rotation) {
+                                transform += 'rotateZ(' + rotation + 'deg)';
+                            }
+                            var px = 0;
+                            var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+                            if (isFirefox) {
+                                px += 2 + Math.round(textNode.fontSize() / 20);
+                            }
+                            transform += 'translateY(-' + px + 'px)';
+                            textarea.style.transform = transform;
+                            textarea.style.height = 'auto';
+                            textarea.style.height = textarea.scrollHeight + 3 + 'px';
+                            textarea.focus();
 
-  </script>
-</body>
+                            function removeTextarea() {
+                                textarea.parentNode.removeChild(textarea);
+                                window.removeEventListener('click', handleOutsideClick);
+                                textNode.show();
+                                tr5.show();
+                                tr5.forceUpdate();
+                            }
+                            function setTextareaWidth(newWidth) {
+                                if (!newWidth) {
+                                    newWidth = textNode.placeholder.length * textNode.fontSize();
+                                }
+                                var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                                var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+                                if (isSafari || isFirefox) {
+                                    newWidth = Math.ceil(newWidth);
+                                }
+                                var isEdge = document.documentMode || /Edge/.test(navigator.userAgent);
+                                if (isEdge) {
+                                    newWidth += 1;
+                                }
+                                textarea.style.width = newWidth + 'px';
+                            }
+                            textarea.addEventListener('keydown', function (e) {
+                                if (e.keyCode === 13 && !e.shiftKey) {
+                                    textNode.text(textarea.value);
+                                    removeTextarea();
+                                }
+                                if (e.keyCode === 27) {
+                                    removeTextarea();
+                                }
+                            });
+                            // 높이 재 설정
+                            textarea.addEventListener('keydown', function (e) {
+                                scale = textNode.getAbsoluteScale().x;
+                                setTextareaWidth(textNode.width() * scale);
+                                textarea.style.height = 'auto';
+                                textarea.style.height = textarea.scrollHeight + textNode.fontSize() + 'px';
+                            });
+                            // 다시 클릭하면 텍스트 크기 조절 나오기
+                            function handleOutsideClick(e) {
+                                if (e.target !== textarea) {
+                                    textNode.text(textarea.value);
+                                    removeTextarea();
+                                }
+                            }
+                            setTimeout(function () {
+                                window.addEventListener('click', handleOutsideClick);
+                            });
+                        });
+                    }
+                }
+                // color function
+                function fnColor() {
+                    // color버튼 클릭시 color 변경
+                    document.getElementById('color').addEventListener('change', function () {
+                        if (tr5._nodes[0] == textNode) {
+                            textNode.fill(color == null ? '#4169e1' : color);
+                        }
+                    });
+                    // 클릭한 색상으로 input color 변경
+                    textNode.on('click', function (e) {
+                        var targetColor = e.target.attrs.fill;
+                        document.getElementById('color').value = targetColor;
+                    });
+                    // sqare버튼 클릭시 input color 변경
+                    document.getElementById('color').value = textNode.attrs.fill;
+                }
+                // 전체삭제 function
+                function fnAllDel() {
+                    document.getElementById('del').addEventListener('click', function () {
+                        textNode.destroy(); // destroy=> konva에서 삭제
+                        tr5.destroy();
+                    });
+                }
+                // Backspace key function
+                function fnBackey() {
+                    container.focus(); // focus 잡히게
+                    container.addEventListener('keydown', function (e) {
+                        var key = e.key;
+                        if (tr5._nodes[0] == textNode) {
+                            if (key == 'Backspace') {
+                                textNode.destroy();
+                                tr5.destroy();
+                            }
+                        }
+                    });
+                }
+                // 오른쪽 마우스 클릭
+                function fnDelSquare() {
+                    textNode.on('click', function (e) {
+                        fnDel();
+                        document.getElementById('context-del').addEventListener('click', function () {
+                            if (tr5._nodes[0] == textNode) {
+                                textNode.destroy();
+                                tr5.destroy();
+                            }
+                        });
+                    });
+                }
+            }
+            // 이미지 관련 function
+            function createImg(e) {
+                var inputImg = document.getElementById('theImg');
+                var URL = window.webkitURL || window.URL;
+                var url = URL.createObjectURL(inputImg.files[0]);
+                var img = new Image();
+                img.src = url;
+
+                img.onload = function () {
+                    var img_width = img.width;
+                    var img_height = img.height;
+                    var max = 200;
+                    var ratio = img_width > img_height ? img_width / max : img_height / max;
+
+                    var theImg = new Konva.Image({
+                        name: 'rect',
+                        image: img,
+                        x: 100,
+                        y: 50,
+                        width: img_width / ratio, //이미지 width
+                        height: img_height / ratio, //이미지 height
+                        draggable: true,
+                    });
+                    var tr6 = new Konva.Transformer({
+                        name: 'tr6TheImg',
+                    });
+                    layer.add(theImg);
+                    shapes.push(theImg);
+                    layer.add(tr6);
+                    tr6.nodes([theImg]);
+
+                    fnClick();
+                    fnNodes();
+                    fnAllDel();
+                    fnBackey();
+                    fnDelSquare();
+
+                    // click function
+                    function fnClick(e) {
+                        theImg.on('click', function (e) {
+                            tr6.nodes([theImg]); // tr6 나오게
+                        });
+                        document.getElementById('theImg').addEventListener('click', function () {
+                            tr6.nodes([]); // tr6 없애기
+                        });
+                    }
+                    // tr6 없애는 function
+                    function fnNodes() {
+                        function getDistance(rect, p) {
+                            var dx = Math.max(rect.x - p.x, 0, p.x - (rect.x + rect.width));
+                            var dy = Math.max(rect.y - p.y, 0, p.y - (rect.y + rect.height));
+                            return Math.sqrt(dx * dx + dy * dy); // Math.sqrt()숫자의 제곱근을 반환
+                        }
+                        stage.on('click', function () {
+                            const rect = theImg.getClientRect(); // 테두리박스 반환
+                            const dist = getDistance(rect, stage.getPointerPosition());
+                            // getPointerPosition => 마우스 포인터 위치
+                            if (dist > 0) {
+                                tr6.nodes([]);
+                            }
+                        });
+                        // 다른 도형 tr 사라지게 만들기
+                        var transform = stage.find('Transformer');
+                        transform.forEach(function (item) {
+                            if (item.attrs.name !== 'tr6TheImg') {
+                                item.nodes([]);
+                            }
+                        });
+                    }
+                    // 전체삭제 function
+                    function fnAllDel() {
+                        document.getElementById('del').addEventListener('click', function () {
+                            theImg.destroy(); // destroy=> konva에서 삭제
+                            tr6.destroy();
+                        });
+                    }
+                    // Backspace key function
+                    function fnBackey() {
+                        container.focus(); // focus 잡히게
+                        container.addEventListener('keydown', function (e) {
+                            var key = e.key;
+                            if (tr6._nodes[0] == theImg) {
+                                if (key == 'Backspace') {
+                                    theImg.destroy();
+                                    tr6.destroy();
+                                }
+                            }
+                        });
+                    }
+                    // 오른쪽 마우스 클릭
+                    function fnDelSquare() {
+                        theImg.on('click', function (e) {
+                            fnDel();
+                            document.getElementById('context-del').addEventListener('click', function () {
+                                if (tr6._nodes[0] == theImg) {
+                                    theImg.destroy();
+                                    tr6.destroy();
+                                }
+                            });
+                        });
+                    }
+                };
+            }
+            // 배경 관련 function
+            function createBack() {
+                var inputImg = document.getElementById('background');
+                var URL = window.webkitURL || window.URL;
+                var url = URL.createObjectURL(inputImg.files[0]);
+                var img = new Image();
+                img.src = url;
+
+                img.onload = function () {
+                    var img_width = img.width;
+                    var img_height = img.height;
+                    var max_width = 1400;
+                    var max_height = 500;
+                    var ratio = img_width > img_height ? img_width / max_width : img_height / max_height;
+
+                    var theImg = new Konva.Image({
+                        name: 'rect',
+                        image: img,
+                        x: 0,
+                        y: 0,
+                        width: img_width / ratio, //이미지 width
+                        height: img_height / ratio, //이미지 height
+                        fillLinearGradientStartPoint: { x: 0, y: 0 },
+                        fillLinearGradientEndPoint: { x: stage.width(), y: stage.height() },
+                    });
+                    layer.add(theImg);
+                    shapes.push(theImg);
+                    theImg.setZIndex(0); //index 0 맨 뒤로
+
+                    centreRectShape(theImg);
+                    fnAllDel();
+
+                    // 가운데 정렬 function
+                    function centreRectShape(shape) {
+                        shape.x((stage.getWidth() - shape.getWidth()) / 2);
+                    }
+                    // 전체삭제 function
+                    function fnAllDel() {
+                        document.getElementById('del').addEventListener('click', function () {
+                            theImg.destroy(); // destroy=> konva에서 삭제
+                        });
+                    }
+                };
+            }
+            function createPdf() {
+                var pdf = new jsPDF('l', 'px', [stage.width(), stage.height()]);
+                pdf.setTextColor('#000000'); //pdf 텍스트 추가
+                // 이미지 보이게 하기
+                pdf.addImage(
+                    stage.toDataURL({ pixelRatio: 2 }), // pixelRatio => 노드를 이미지로 변환할 때 사용, 500X500 = 1
+                    0,
+                    0,
+                    stage.width(),
+                    stage.height()
+                );
+                pdf.save('custom.pdf');
+            }
+
+            stage.draw();
+        </script>
+    </body>
 </html>
